@@ -86,40 +86,24 @@ if page == "Security Dashboard":
 # CAMERA MONITORING
 # --------------------------------------------------
 
+
+# --------------------------------------------------
+# CAMERA MONITORING
+# --------------------------------------------------
+
 elif page == "Camera Monitoring":
 
     st.title("📹 Camera Monitoring")
-
-    st.caption("Multiple workplace camera feeds")
-
-    st.divider()
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        st.subheader("CAM-01")
-        st.write("📍 Production Area")
-        st.info("Camera feed will appear here.")
-        st.success("🟢 Monitoring")
-
-    with col2:
-
-        st.subheader("CAM-02")
-        st.write("📍 Workshop")
-        st.info("Camera feed will appear here.")
-        st.success("🟢 Monitoring")
+    st.caption("Workplace camera feed")
 
     st.divider()
 
-    st.subheader("CAM-03")
-    st.write("📍 Conveyor Area")
-    st.info("Camera feed will appear here.")
+    st.subheader("CAM-01")
+    st.write("📍 Production Area")
+
+    st.video("data/cameras/cam01.mp4")
+
     st.success("🟢 Monitoring")
-
-# --------------------------------------------------
-# ALERT CENTER
-# --------------------------------------------------
 
 elif page == "Alert Center":
 

@@ -1,4 +1,6 @@
 import streamlit as st
+from ultralytics import YOLO
+import cv2
 
 # --------------------------------------------------
 # PAGE CONFIGURATION
@@ -11,11 +13,21 @@ st.set_page_config(
 )
 
 # --------------------------------------------------
+# LOAD YOLO MODEL
+# --------------------------------------------------
+
+@st.cache_resource
+def load_model():
+    return YOLO("yolo11n.pt")
+
+
+model = load_model()
+
+# --------------------------------------------------
 # SIDEBAR
 # --------------------------------------------------
 
 st.sidebar.title("🦺 VisionGuard")
-
 st.sidebar.write("HSE Security Control Room")
 
 page = st.sidebar.radio(
@@ -30,7 +42,6 @@ page = st.sidebar.radio(
 )
 
 st.sidebar.divider()
-
 st.sidebar.success("System Online")
 
 # --------------------------------------------------
@@ -45,47 +56,25 @@ if page == "Security Dashboard":
 
     st.divider()
 
-    # Dashboard metrics
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric(
-            "Cameras Online",
-            "3"
-        )
+        st.metric("Cameras Online", "1")
 
     with col2:
-        st.metric(
-            "Active Alerts",
-            "0"
-        )
+        st.metric("Active Alerts", "0")
 
     with col3:
-        st.metric(
-            "Confirmed Violations",
-            "0"
-        )
+        st.metric("Confirmed Violations", "0")
 
     with col4:
-        st.metric(
-            "False Alarms",
-            "0"
-        )
+        st.metric("False Alarms", "0")
 
     st.divider()
 
     st.subheader("System Status")
 
-    st.success("🟢 All camera systems are online.")
-
-    st.info(
-        "No active HSE safety alerts require Security verification."
-    )
-
-# --------------------------------------------------
-# CAMERA MONITORING
-# --------------------------------------------------
-
+    st.success("🟢 Camera system is online.")
 
 # --------------------------------------------------
 # CAMERA MONITORING
@@ -94,16 +83,60 @@ if page == "Security Dashboard":
 elif page == "Camera Monitoring":
 
     st.title("📹 Camera Monitoring")
-    st.caption("Workplace camera feed")
+
+    st.caption("AI person detection")
 
     st.divider()
 
     st.subheader("CAM-01")
     st.write("📍 Production Area")
 
-    st.video("data/cameras/cam01.mp4")
+    video_path = "data/cameras/cam01.mp4"
 
-    st.success("🟢 Monitoring")
+    cap = cv2.VideoCapture(video_path)
+
+    if not cap.isOpened():
+
+        st.error("Could not open camera video.")
+
+    else:
+
+        frame_placeholder = st.empty()
+
+        stop_button = st.button("⏹️ Stop Detection")
+
+        while cap.isOpened() and not stop_button:
+
+            success, frame = cap.read()
+
+            if not success:
+                break
+
+            # Run YOLO
+            results = model(frame, verbose=False)
+
+            # Draw detection boxes
+            annotated_frame = results[0].plot()
+
+            # Convert BGR to RGB
+            annotated_frame = cv2.cvtColor(
+                annotated_frame,
+                cv2.COLOR_BGR2RGB
+            )
+
+            frame_placeholder.image(
+                annotated_frame,
+                channels="RGB",
+                use_container_width=True
+            )
+
+        cap.release()
+
+    st.success("🟢 Person detection enabled.")
+
+# --------------------------------------------------
+# ALERT CENTER
+# --------------------------------------------------
 
 elif page == "Alert Center":
 
@@ -163,5 +196,3 @@ elif page == "HSE Summary":
     st.subheader("Violations by Type")
 
     st.info("Violation chart will appear here once events are detected.")
-
-

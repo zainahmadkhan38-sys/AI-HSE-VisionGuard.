@@ -178,47 +178,6 @@ elif page == "HSE Summary":
 
     st.subheader("Violations by Type")
 
-    st.info("Violation chart will appear here once events are detected.")# --------------------------------------------------
-# CAMERA MONITORING
-# --------------------------------------------------
+    st.info("Violation chart will appear here once events are detected.")
 
-elif page == "Camera Monitoring":
-
-    st.title("📹 Camera Monitoring")
-    st.caption("Multiple workplace camera feeds")
-
-    st.divider()
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.subheader("CAM-01")
-        st.write("📍 Production Area")
-
-        try:
-            st.video("data/cameras/cam01.mp4")
-            st.success("🟢 Monitoring")
-        except:
-            st.error("Camera video not found")
-
-    with col2:
-        st.subheader("CAM-02")
-        st.write("📍 Workshop")
-
-        try:
-            st.video("data/cameras/cam02.mp4")
-            st.success("🟢 Monitoring")
-        except:
-            st.error("Camera video not found")
-
-    st.divider()
-
-    st.subheader("CAM-03")
-    st.write("📍 Conveyor Area")
-
-    try:
-        st.video("data/cameras/cam03.mp4")
-        st.success("🟢 Monitoring")
-    except:
-        st.error("Camera video not found")
 

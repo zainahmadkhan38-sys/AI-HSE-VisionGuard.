@@ -1,6 +1,6 @@
 import streamlit as st
-from ultralytics import YOLO
 import cv2
+from ultralytics import YOLO
 
 # --------------------------------------------------
 # PAGE CONFIGURATION
